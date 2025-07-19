@@ -1,21 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
-import { generateContent } from "@/lib/genai";
-import { logtail } from "@/lib/logtail";
+import { withBetterStack, BetterStackRequest } from '@logtail/next';
+import { NextResponse } from 'next/server';
+import { generateContent } from '@/lib/genai';
 
-export async function POST(req: NextRequest) {
+export const POST = withBetterStack(async (req: BetterStackRequest) => {
+  req.log.info('Chat API called', { timestamp: new Date().toISOString() });
+
   try {
-    logtail.info("/api/chat route hit");
     const { prompt } = await req.json();
-    logtail.info("Prompt received", { prompt });
+    req.log.info('Prompt received', { prompt });
+
     if (!prompt) {
-      logtail.warn("No prompt provided");
-      return NextResponse.json({ text: "No prompt provided." }, { status: 400 });
+      req.log.warn('No prompt provided');
+      return NextResponse.json({ text: 'No prompt provided.' }, { status: 400 });
     }
+
     const text = await generateContent(prompt);
-    logtail.info("GenAI response", { text });
+    req.log.info('GenAI response', { text });
+
     return NextResponse.json({ text });
   } catch (e) {
-    logtail.error("Error in /api/chat", { error: e });
-    return NextResponse.json({ text: "Error generating response." }, { status: 500 });
+    req.log.error('Error in /api/chat', { error: e });
+    return NextResponse.json({ text: 'Error generating response.' }, { status: 500 });
   }
-} 
+});
