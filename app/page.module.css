@@ -214,6 +214,13 @@ a.secondary {
   border-bottom-right-radius: 4px;
 }
 
+@media (prefers-color-scheme: dark) {
+  .user {
+    background: var(--foreground);
+    color: var(--background);
+  }
+}
+
 .bot {
   align-self: flex-start;
   background: var(--bot-bg);
@@ -238,6 +245,14 @@ a.secondary {
   outline: none;
   background: var(--gray-alpha-100, #fafafa);
   color: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  .input {
+    background: #222;
+    color: var(--foreground);
+    border: 1px solid #444;
+  }
 }
 
 .sendButton {
@@ -277,4 +292,76 @@ a.secondary {
     font-size: 0.95rem;
     padding: 0 12px;
   }
+}
+
+/* Force all list text and markers to use bot-text color */
+.chatMessages ul, .chatMessages ol {
+  color: var(--bot-text) !important;
+  opacity: 1 !important;
+  background-color: #eaeaea !important;
+  border-radius: 16px;
+  padding: 12px 18px 12px 36px;
+  margin: 8px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  list-style-position: inside;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chatMessages ul, .chatMessages ol {
+    background-color: #222 !important;
+  }
+}
+
+.chatMessages ul li,
+.chatMessages ol li {
+  color: var(--bot-text) !important;
+  opacity: 1 !important;
+  border-radius: 0;
+  padding: 2px 0;
+  margin-bottom: 4px;
+}
+
+.chatMessages ul li::marker,
+.chatMessages ol li::marker {
+  color: var(--bot-text) !important;
+  opacity: 1 !important;
+}
+
+/* Also force strong/bold text in lists to be visible */
+.chatMessages li strong,
+.chatMessages li b {
+  color: var(--bot-text) !important;
+  font-weight: bold;
+  opacity: 1 !important;
+}
+
+/* If markdown renders numbers as spans, force those too */
+.chatMessages ol li span,
+.chatMessages ul li span {
+  color: var(--bot-text) !important;
+  opacity: 1 !important;
+}
+
+.input::placeholder {
+  color: var(--foreground);
+  opacity: 0.7;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chatMessages ul, .chatMessages ol {
+    color: var(--bot-text) !important;
+  }
+  .chatMessages li {
+    color: var(--bot-text) !important;
+  }
+  .input::placeholder {
+    color: var(--foreground);
+    opacity: 0.7;
+  }
+}
+
+/* Remove any text-shadow or filter that could cause faint text */
+.chatMessages ul, .chatMessages ol, .chatMessages li {
+  text-shadow: none !important;
+  filter: none !important;
 }
