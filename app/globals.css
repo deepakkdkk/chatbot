@@ -1,12 +1,20 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bot-bg: #eaeaea;
+  --bot-text: #171717;
+  --header-bg: #ededed;
+  --header-text: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --bot-bg: #222;
+    --bot-text: #ededed;
+    --header-bg: #111;
+    --header-text: #ededed;
   }
 }
 

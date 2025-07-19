@@ -180,8 +180,8 @@ a.secondary {
 
 .chatHeader {
   padding: 16px;
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--header-bg);
+  color: var(--header-text);
   font-size: 1.25rem;
   font-weight: 600;
   text-align: center;
@@ -216,8 +216,8 @@ a.secondary {
 
 .bot {
   align-self: flex-start;
-  background: var(--gray-alpha-200, #eaeaea);
-  color: var(--foreground);
+  background: var(--bot-bg);
+  color: var(--bot-text);
   border-bottom-left-radius: 4px;
 }
 
