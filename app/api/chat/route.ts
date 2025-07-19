@@ -3,23 +3,27 @@ import { NextResponse } from 'next/server';
 import { generateContent } from '@/lib/genai';
 
 export const POST = withBetterStack(async (req: BetterStackRequest) => {
-  req.log.info('Chat API called', { timestamp: new Date().toISOString() });
+  const endpoint = '/api/chat';
+  const method = 'POST';
+  const start = Date.now();
 
   try {
     const { prompt } = await req.json();
-    req.log.info('Prompt received', { prompt });
 
     if (!prompt) {
-      req.log.warn('No prompt provided');
+      const duration = Date.now() - start;
+      req.log.info(`${method} ${endpoint} 400 in ${duration}ms`);
       return NextResponse.json({ text: 'No prompt provided.' }, { status: 400 });
     }
 
     const text = await generateContent(prompt);
-    req.log.info('GenAI response', { text });
-
+    const duration = Date.now() - start;
+    req.log.info(`${method} ${endpoint} 200 in ${duration}ms`);
     return NextResponse.json({ text });
   } catch (e) {
-    req.log.error('Error in /api/chat', { error: e });
+    const duration = Date.now() - start;
+    req.log.info(`${method} ${endpoint} 500 in ${duration}ms`);
+    req.log.error('Error in /api/chat', { error: e, endpoint, status: 500 });
     return NextResponse.json({ text: 'Error generating response.' }, { status: 500 });
   }
 });
