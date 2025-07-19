@@ -278,3 +278,35 @@ a.secondary {
     padding: 0 12px;
   }
 }
+
+.chatMessages ul, .chatMessages ol {
+  background: transparent;
+  color: var(--bot-text);
+  margin: 0 0 0 20px;
+  padding: 0 0 0 20px;
+}
+
+.chatMessages li {
+  color: var(--bot-text);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.input::placeholder {
+  color: var(--foreground);
+  opacity: 0.7;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chatMessages ul, .chatMessages ol {
+    color: var(--bot-text);
+  }
+  .chatMessages li {
+    color: var(--bot-text);
+  }
+  .input::placeholder {
+    color: var(--foreground);
+    opacity: 0.7;
+  }
+}
