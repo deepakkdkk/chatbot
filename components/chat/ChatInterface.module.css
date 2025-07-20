@@ -11,15 +11,6 @@
   overflow: hidden;
 }
 
-.chatHeader {
-  padding: 16px;
-  background: var(--header-bg);
-  color: var(--header-text);
-  font-size: 1.25rem;
-  font-weight: 600;
-  text-align: center;
-}
-
 .chatMessages {
   flex: 1;
   padding: 24px 16px;

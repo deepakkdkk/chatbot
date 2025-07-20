@@ -177,7 +177,6 @@ export function ChatInterface({ className = "" }: ChatInterfaceProps) {
 
   return (
     <div className={`${styles.chatbotContainer} ${className}`}>
-      <div className={styles.chatHeader}>Chatbot</div>
       <div className={styles.chatMessages}>
         {messages.map((msg, idx) =>
           msg.sender === "bot"
