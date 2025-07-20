@@ -1,0 +1,235 @@
+.chatbotContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px); /* Full height minus header */
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  background: var(--background);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.chatHeader {
+  padding: 16px;
+  background: var(--header-bg);
+  color: var(--header-text);
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.chatMessages {
+  flex: 1;
+  padding: 24px 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--gray-alpha-100, #f5f5f5);
+}
+
+.message {
+  max-width: 75%;
+  padding: 12px 18px;
+  border-radius: 16px;
+  font-size: 1rem;
+  line-height: 1.5;
+  word-break: break-word;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.user {
+  align-self: flex-end;
+  background: var(--foreground);
+  color: var(--background);
+  border-bottom-right-radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .user {
+    background: var(--foreground);
+    color: var(--background);
+  }
+}
+
+.bot {
+  align-self: flex-start;
+  background: var(--bot-bg);
+  color: var(--bot-text);
+  border-bottom-left-radius: 4px;
+}
+
+.inputArea {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  background: var(--background);
+  border-top: 1px solid var(--gray-alpha-200, #eaeaea);
+}
+
+.input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-alpha-200, #eaeaea);
+  font-size: 1rem;
+  outline: none;
+  background: var(--gray-alpha-100, #fafafa);
+  color: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  .input {
+    background: var(--gray-alpha-100, #1a1a1a);
+    border-color: var(--gray-alpha-200, #333);
+  }
+}
+
+.input:focus {
+  border-color: var(--foreground);
+}
+
+.sendButton {
+  padding: 12px 24px;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sendButton:hover:not(:disabled) {
+  background: var(--button-primary-hover);
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1200px) {
+  .chatbotContainer {
+    max-width: 95%;
+    margin: 10px auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .chatbotContainer {
+    height: calc(100vh - 100px);
+    max-width: 100%;
+    margin: 10px;
+    border-radius: 12px;
+  }
+
+  .chatMessages {
+    padding: 16px 12px;
+  }
+
+  .inputArea {
+    padding: 12px;
+  }
+
+  .input {
+    padding: 10px 12px;
+  }
+
+  .sendButton {
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chatbotContainer {
+    height: calc(100vh - 80px);
+    margin: 5px;
+    border-radius: 8px;
+  }
+}
+
+.chatMessages ul, .chatMessages ol {
+  margin: 0;
+  padding: 0;
+  color: var(--bot-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .chatMessages ul, .chatMessages ol {
+    color: var(--bot-text);
+  }
+
+  .chatMessages li {
+    color: var(--bot-text);
+  }
+}
+
+.chatMessages ul li,
+.chatMessages ol li {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+}
+
+.chatMessages ul li::marker,
+.chatMessages ol li::marker {
+  color: inherit;
+}
+
+.chatMessages li strong,
+.chatMessages li b {
+  font-weight: 600;
+  color: inherit;
+}
+
+.chatMessages ol li span,
+.chatMessages ul li span {
+  color: inherit;
+}
+
+.input::placeholder {
+  color: #999;
+}
+
+@media (prefers-color-scheme: dark) {
+  .input::placeholder {
+    color: #666;
+  }
+}
+
+.chatMessages ul, .chatMessages ol, .chatMessages li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Streaming indicator */
+.streamingIndicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--foreground);
+  animation: pulse 1.5s ease-in-out infinite;
+  margin-left: 8px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .streamingIndicator {
+    background-color: var(--foreground);
+  }
+} 
