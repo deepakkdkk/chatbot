@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { Button } from '../ui/Button';
-import { useAuth } from '@/contexts/AuthContext';
 import styles from './Sidebar.module.css';
 
 interface SidebarProps {
@@ -11,9 +11,10 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { user, login, signup, logout } = useAuth();
+  const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState<'login' | 'signup' | 'profile'>('login');
   const [authError, setAuthError] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -21,10 +22,38 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     }
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoading(true);
+      setAuthError('');
+      await signIn('google', { callbackUrl: '/' });
+    } catch (error) {
+      setAuthError('Google sign-in failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: '/' });
     onClose();
   };
+
+  if (status === 'loading') {
+    return (
+      <div className={styles.overlay} onClick={handleOverlayClick}>
+        <div className={styles.sidebar}>
+          <div className={styles.header}>
+            <h2>Menu</h2>
+            <button className={styles.closeButton} onClick={onClose}>×</button>
+          </div>
+          <div className={styles.content}>
+            <div className={styles.loading}>Loading...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -40,22 +69,22 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
 
             <div className={styles.content}>
-              {user ? (
+              {session?.user ? (
                 // User is logged in - show profile
                 <div className={styles.profileSection}>
                   <div className={styles.userInfo}>
                     <div className={styles.avatar}>
-                      {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} />
+                      {session.user.image ? (
+                        <img src={session.user.image} alt={session.user.name || 'User'} />
                       ) : (
                         <div className={styles.avatarPlaceholder}>
-                          {user.name.charAt(0).toUpperCase()}
+                          {session.user.name?.charAt(0).toUpperCase() || 'U'}
                         </div>
                       )}
                     </div>
                     <div className={styles.userDetails}>
-                      <h3>{user.name}</h3>
-                      <p>{user.email}</p>
+                      <h3>{session.user.name || 'User'}</h3>
+                      <p>{session.user.email}</p>
                     </div>
                   </div>
                   
@@ -101,6 +130,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       </div>
                     )}
                     
+                    <div className={styles.socialAuth}>
+                      <Button 
+                        onClick={handleGoogleSignIn}
+                        disabled={loading}
+                        className={styles.googleButton}
+                      >
+                        {loading ? 'Signing in...' : 'Continue with Google'}
+                      </Button>
+                    </div>
+
+                    <div className={styles.divider}>
+                      <span>or</span>
+                    </div>
+                    
                     {activeTab === 'login' && (
                       <LoginForm onSuccess={onClose} onError={setAuthError} />
                     )}
@@ -124,7 +167,6 @@ interface AuthFormProps {
 }
 
 function LoginForm({ onSuccess, onError }: AuthFormProps) {
-  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -135,8 +177,17 @@ function LoginForm({ onSuccess, onError }: AuthFormProps) {
     onError('');
 
     try {
-      await login(email, password);
-      onSuccess();
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        onError('Invalid email or password.');
+      } else {
+        onSuccess();
+      }
     } catch (error) {
       onError('Login failed. Please try again.');
     } finally {
@@ -180,7 +231,6 @@ function LoginForm({ onSuccess, onError }: AuthFormProps) {
 }
 
 function SignupForm({ onSuccess, onError }: AuthFormProps) {
-  const { signup } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -192,8 +242,18 @@ function SignupForm({ onSuccess, onError }: AuthFormProps) {
     onError('');
 
     try {
-      await signup(name, email, password);
-      onSuccess();
+      const result = await signIn('credentials', {
+        name,
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        onError('Signup failed. Please try again.');
+      } else {
+        onSuccess();
+      }
     } catch (error) {
       onError('Signup failed. Please try again.');
     } finally {

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { Sidebar } from './Sidebar';
 import { MenuButton } from '../ui/MenuButton';
-import { useAuth } from '@/contexts/AuthContext';
 import styles from './MainLayout.module.css';
 
 interface MainLayoutProps {
@@ -12,7 +12,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user } = useAuth();
+  const { data: session } = useSession();
 
   const handleMenuClick = () => {
     setSidebarOpen(true);
@@ -30,9 +30,9 @@ export function MainLayout({ children }: MainLayoutProps) {
           <MenuButton onClick={handleMenuClick} className={styles.menuButton} />
           <h1 className={styles.title}>AI Chatbot</h1>
           <div className={styles.headerRight}>
-            {user && (
+            {session?.user && (
               <div className={styles.userInfo}>
-                <span>{user.name}</span>
+                <span>{session.user.name}</span>
               </div>
             )}
           </div>
