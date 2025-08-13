@@ -12,55 +12,37 @@ public class PassengerCollector {
      * @param gridList square matrix as a list of list of integers
      * @return maximum passengers that can be collected (0 if no valid path)
      */
-    public int maxPassengers(List<List<Integer>> gridList) {
-        int n = gridList.size();
-        // Convert to primitive 2-D array for faster access in the DP.
-        int[][] grid = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                grid[i][j] = gridList.get(i).get(j);
-            }
-        }
-        return maxPassengers(grid);
-    }
+    public int maxPassengers(List<List<Integer>> grid) {
+        int n = grid.size();
+        final int NEG_INF = Integer.MIN_VALUE / 2;
 
-    // ---------------------------------------------------------------------
-    //  Implementation below identical to classic "Cherry Pickup" DP, using
-    //  two walkers moving from (0,0) to (n-1,n-1) simultaneously.
-    // ---------------------------------------------------------------------
-
-    private int maxPassengers(int[][] grid) {
-        int n = grid.length;
-        final int NEG_INF = Integer.MIN_VALUE / 2; // avoid overflow on +
-
-        // dp[r1][r2] = best score after k steps with walker1 at (r1,c1) & walker2 at (r2,c2)
+        // dp[r1][r2] – best after k steps with walker1 at (r1,c1) and walker2 at (r2,c2)
         int[][] dp = new int[n][n];
         for (int[] row : dp) Arrays.fill(row, NEG_INF);
-        if (grid[0][0] != -1) dp[0][0] = grid[0][0];
+        if (grid.get(0).get(0) != -1) dp[0][0] = grid.get(0).get(0);
 
         for (int k = 1; k <= 2 * (n - 1); k++) {
             int[][] next = new int[n][n];
             for (int[] row : next) Arrays.fill(row, NEG_INF);
 
-            // r1 and r2 iterate over possible row indices at step k
             for (int r1 = Math.max(0, k - (n - 1)); r1 <= Math.min(n - 1, k); r1++) {
                 int c1 = k - r1;
-                if (c1 < 0 || c1 >= n || grid[r1][c1] == -1) continue; // obstacle or OOB
+                if (c1 < 0 || c1 >= n || grid.get(r1).get(c1) == -1) continue;
 
                 for (int r2 = Math.max(0, k - (n - 1)); r2 <= Math.min(n - 1, k); r2++) {
                     int c2 = k - r2;
-                    if (c2 < 0 || c2 >= n || grid[r2][c2] == -1) continue;
+                    if (c2 < 0 || c2 >= n || grid.get(r2).get(c2) == -1) continue;
 
                     int bestPrev = maxPrev(dp, r1, r2);
                     if (bestPrev == NEG_INF) continue;
 
-                    int gain = grid[r1][c1];
-                    if (r2 != r1 || c2 != c1) gain += grid[r2][c2]; // avoid double-counting
+                    int gain = grid.get(r1).get(c1);
+                    if (r2 != r1 || c2 != c1) gain += grid.get(r2).get(c2);
 
                     next[r1][r2] = Math.max(next[r1][r2], bestPrev + gain);
                 }
             }
-            dp = next; // move to next layer
+            dp = next;
         }
         return Math.max(0, dp[n - 1][n - 1]);
     }
